@@ -98,8 +98,9 @@ class _MessageInputFieldWidgetState
     required Color backgroundColor,
     required VoidCallback onPressed,
     required String text,
+    required ThemeColor themeColor,
   }) {
-    final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
+    //final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -126,8 +127,8 @@ class _MessageInputFieldWidgetState
   }
 
   // 미디어 파일 업로드 BottomSheet 위젯 띄우기
-  void _showMediaFileLUploadSheet() {
-    final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
+  void _showMediaFileLUploadSheet({required ThemeColor themeColor}) {
+    // final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
 
     showBottomSheet(
       // 직사각형 형태의 Sheet, 속성 지정 안하면 양쪽 위가 둥근 형태
@@ -144,6 +145,7 @@ class _MessageInputFieldWidgetState
                 _sendMediaMessage(messageType: MessageEnum.image);
               },
               text: S.current.image,
+              themeColor: themeColor,
             ),
             _mediaFileUploadButton(
               iconData: Icons.camera_outlined,
@@ -152,6 +154,7 @@ class _MessageInputFieldWidgetState
                 _sendMediaMessage(messageType: MessageEnum.video);
               },
               text: S.current.video,
+              themeColor: themeColor,
             ),
           ],
         );
@@ -312,7 +315,9 @@ class _MessageInputFieldWidgetState
                 // 답글 메시지가 아닐 때만 + (이미지/동영상) 버튼 보이기
                 if (!isReplyMessage)
                   GestureDetector(
-                    onTap: () => _showMediaFileLUploadSheet(),
+                    onTap:
+                        () =>
+                            _showMediaFileLUploadSheet(themeColor: themeColor),
                     // + 버튼 (동영상, 이미지)
                     child: Container(
                       padding: const EdgeInsets.all(10),

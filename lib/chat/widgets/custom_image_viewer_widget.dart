@@ -20,7 +20,10 @@ class CustomImageViewerWidget extends StatelessWidget {
               child: GestureDetector(
                 // context : model 창의 context 이므로 model 창만 닫힘
                 onTap: () => Navigator.of(context).pop(),
-                child: ExtendedImage.network(imageUrl),
+                child: ExtendedImage.network(
+                  imageUrl,
+                  constraints: const BoxConstraints(maxHeight: 200),
+                ),
               ),
             );
           },

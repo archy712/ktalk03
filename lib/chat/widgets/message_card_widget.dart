@@ -6,6 +6,7 @@ import 'package:ktalk03/auth/models/user_model.dart';
 import 'package:ktalk03/auth/providers/auth_provider.dart';
 import 'package:ktalk03/chat/models/message_model.dart';
 import 'package:ktalk03/chat/providers/chat_provider.dart';
+import 'package:ktalk03/chat/providers/message_provider.dart';
 import 'package:ktalk03/chat/widgets/custom_image_viewer_widget.dart';
 import 'package:ktalk03/chat/widgets/video_download_widget.dart';
 import 'package:ktalk03/common/enum/message_enum.dart';
@@ -15,9 +16,12 @@ import 'package:ktalk03/common/utils/locale/generated/l10n.dart';
 
 class MessageCardWidget extends ConsumerStatefulWidget {
   // 메시지 모델
-  final MessageModel messageModel;
+  //final MessageModel messageModel;
 
-  const MessageCardWidget({super.key, required this.messageModel});
+  const MessageCardWidget({
+    super.key,
+    // required this.messageModel,
+  });
 
   @override
   ConsumerState<MessageCardWidget> createState() => _MessageCardWidgetState();
@@ -58,8 +62,9 @@ class _MessageCardWidgetState extends ConsumerState<MessageCardWidget>
     required String text,
     required MessageEnum messageType,
     required bool isMe,
+    required ThemeColor themeColor,
   }) {
-    final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
+    // final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
 
     switch (messageType) {
       case MessageEnum.text:
@@ -171,7 +176,8 @@ class _MessageCardWidgetState extends ConsumerState<MessageCardWidget>
     final ThemeColor themeColor = ref.watch(customThemeProvider).themeColor;
 
     // 메시지
-    final MessageModel messageModel = widget.messageModel;
+    // final MessageModel messageModel = widget.messageModel;
+    final MessageModel messageModel = ref.watch(messageProvider);
 
     // 메시지 글쓴이 (사용자)
     final UserModel userModel = messageModel.userModel;
@@ -216,9 +222,10 @@ class _MessageCardWidgetState extends ConsumerState<MessageCardWidget>
           // 드래그를 하다가 손을 놓았을 때 말풍선을 원위치
           onHorizontalDragEnd: (details) {
             // 답글을 위한 상태관리 데이터 등록
-            ref.read(replyMessageModelProvider.notifier).state = widget
-                .messageModel
-                .copyWith(replyMessageModel: null);
+            if (_animationController.value > 0.4) {
+              ref.read(replyMessageModelProvider.notifier).state = messageModel
+                  .copyWith(replyMessageModel: null);
+            }
             // 애니메이션 역으로 재생하여 제자리로 돌아감
             _animationController.reverse();
           },
@@ -317,6 +324,7 @@ class _MessageCardWidgetState extends ConsumerState<MessageCardWidget>
                                         text: messageModel.text,
                                         messageType: messageModel.type,
                                         isMe: isMe,
+                                        themeColor: themeColor,
                                       ),
                                     ],
                                   ),

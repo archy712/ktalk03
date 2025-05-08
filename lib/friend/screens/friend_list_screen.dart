@@ -28,6 +28,9 @@ class FriendListScreen extends ConsumerWidget {
                 separatorBuilder:
                     (context, index) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
+                  // 비동기 전에 context 얻는 Navigator 선언
+                  final NavigatorState myNavigator = Navigator.of(context);
+
                   final Contact contact = data[index];
                   return ListTile(
                     onTap: () async {
@@ -38,13 +41,19 @@ class FriendListScreen extends ConsumerWidget {
                             .enterChatFromFriendList(selectedContact: contact);
 
                         // 채팅 화면으로 이동
-                        if (context.mounted) {
-                          Navigator.pushNamed(
-                            context,
-                            ChatScreen.routeName,
-                            // 이전 채팅방의 캐시 데이터 삭제하여 초기화 처리
-                          ).then((value) => ref.invalidate(chatProvider));
-                        }
+                        // if (context.mounted) {
+                        //   Navigator.pushNamed(
+                        //     context,
+                        //     ChatScreen.routeName,
+                        //     // 이전 채팅방의 캐시 데이터 삭제하여 초기화 처리
+                        //   ).then((value) => ref.invalidate(chatProvider));
+                        // }
+
+                        // 채팅 화면으로 이동, 비동기 작업이 끝난 후 라우팅 처리
+                        // 이전 채팅방의 캐시 데이터 삭제하여 초기화 처리
+                        myNavigator
+                            .pushNamed(ChatScreen.routeName)
+                            .then((value) => ref.invalidate(chatProvider));
                       } catch (e, stackTrace) {
                         logger.e(e);
                         logger.e(stackTrace);

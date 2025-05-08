@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ktalk03/chat/models/message_model.dart';
 import 'package:ktalk03/chat/providers/chat_provider.dart';
 import 'package:ktalk03/chat/providers/chat_state.dart';
+import 'package:ktalk03/chat/providers/message_provider.dart';
 import 'package:ktalk03/chat/widgets/message_card_widget.dart';
 import 'package:ktalk03/common/models/base_model.dart';
 import 'package:ktalk03/common/models/chat_model.dart';
@@ -57,12 +58,17 @@ class _MessageListWidgetState extends ConsumerState<MessageListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // ref.watch 갯수를 줄이기 위해
+    final ChatState chatState = ref.watch(chatProvider);
+
     // 현재 들어와 있는 채팅방 정보 받아오기 (chatProvider, ChatState)
-    final BaseModel baseModel = ref.watch(chatProvider).model;
+    //final BaseModel baseModel = ref.watch(chatProvider).model;
+    final BaseModel baseModel = chatState.model;
 
     // initState() 함수에서 페이지 로딩 시 상태관리 데이터로 저장을 했으므로
     // 상태관리 데이터를 가져온다.
-    final List<MessageModel> messageList = ref.watch(chatProvider).messageList;
+    // final List<MessageModel> messageList = ref.watch(chatProvider).messageList;
+    final List<MessageModel> messageList = chatState.messageList;
 
     // 지정된 Provider 가 업데이트 되었을 때 콜백 함수가 실행
     // 실시간 메시지가 업데이트 되었을 때 콜백함수 실행
@@ -85,25 +91,51 @@ class _MessageListWidgetState extends ConsumerState<MessageListWidget> {
 
         // 채팅 상태정보 ChatState 업데이트
         ref
-            .watch(chatProvider.notifier)
+            .read(chatProvider.notifier)
             .getMessageList(lastMessageId: lastMessageId);
       }
     });
 
     // 메시지 리스트 보여주기
-    return ListView.builder(
-      controller: scrollController,
-      reverse: true,
-      itemCount: messageList.length,
-      itemBuilder: (context, index) {
-        final List<MessageModel> reverseMessageList =
-            messageList.reversed.toList();
+    // return ListView.builder(
+    //   controller: scrollController,
+    //   reverse: true,
+    //   itemCount: messageList.length,
+    //   itemBuilder: (context, index) {
+    //     final List<MessageModel> reverseMessageList =
+    //         messageList.reversed.toList();
+    //
+    //     // return MessageCardWidget(
+    //     //   messageModel: reverseMessageList[index],
+    //     // );
+    //
+    //     // MessageCardWidget 내에서 사용하기 위해 ProviderScope 선언
+    //     return ProviderScope(
+    //       overrides: [
+    //         // 파라미터에 상태관리 데이터로 등록할 MessageModel 전달
+    //         messageProvider.overrideWithValue(reverseMessageList[index]),
+    //       ],
+    //       child: const MessageCardWidget(),
+    //     );
+    //   },
+    // );
 
-        return MessageCardWidget(
-          // messageModel: messageList[index],
-          messageModel: reverseMessageList[index],
-        );
-      },
+    return SingleChildScrollView(
+      controller: scrollController,
+      // 처음 위치를 밑으로 지정하지만, 순서를 뒤집지는 않는다.
+      reverse: true,
+      child: Column(
+        children: [
+          for (final item in messageList)
+            ProviderScope(
+              overrides: [
+                // 파라미터에 상태관리 데이터로 등록할 MessageModel 전달
+                messageProvider.overrideWithValue(item),
+              ],
+              child: const MessageCardWidget(),
+            ),
+        ],
+      ),
     );
   }
 }

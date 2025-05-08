@@ -42,15 +42,21 @@ class OTPScreen extends ConsumerWidget {
                   ),
                   onSubmit: (value) async {
                     try {
+                      // 비동기 작업 전에 context 얻는 Navigator 선언해 주고
+                      final NavigatorState myNavigator = Navigator.of(context);
+
                       // OTP 인증
                       await ref
                           .read(authProvider.notifier)
                           .verifyOTP(userOTP: value);
 
                       // 로그인 후 첫번째 화면만 남기고 나머지 화면들은 전부 다 삭제 처리
-                      if (context.mounted) {
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      }
+                      // if (context.mounted) {
+                      //   Navigator.popUntil(context, (route) => route.isFirst);
+                      // }
+
+                      // 비동기 로직이 끝나고 나서 위에서 선언한 myNavigator 사용
+                      myNavigator.popUntil((route) => route.isFirst);
                     } catch (e, stackTrace) {
                       GlobalNavigator.showAlertDialog(msg: e.toString());
                       logger.e(stackTrace);
