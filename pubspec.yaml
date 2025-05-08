@@ -1,0 +1,63 @@
+name: ktalk03
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  logger: ^2.5.0
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.2
+  firebase_storage: ^12.4.5
+  cloud_firestore: ^5.6.6
+  flutter_riverpod: ^2.6.1
+  country_picker: ^2.0.27
+  flutter_otp_text_field: ^1.5.1+1
+  image_picker: ^1.1.2
+  mime: ^2.0.0
+  loader_overlay: ^5.0.0
+  intl: ^0.19.0
+  permission_handler: ^12.0.0+1
+  flutter_contacts: ^1.1.9+2
+  extended_image: ^10.0.1
+  emoji_picker_flutter: ^4.3.0
+  flutter_slidable: ^4.0.0
+  uuid: ^4.5.1
+  flutter_file_downloader: ^2.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/png/
+    - assets/svg/
+    - assets/images/
+
+flutter_intl:
+  enabled: true
+  arb_dir: lib/common/utils/locale/l10n
+  output_dir: lib/common/utils/locale/generated
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: 'assets/icon/play_store_512.png'
+  adaptive_icon_background: 'assets/icon/ic_launcher_background.png'
+  adaptive_icon_foreground: 'assets/icon/ic_launcher_foreground.png'

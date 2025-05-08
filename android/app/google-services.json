@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "955212458402",
+    "project_id": "ktalk03",
+    "storage_bucket": "ktalk03.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955212458402:android:6b301e863b321e89722afb",
+        "android_client_info": {
+          "package_name": "com.archy712.ktalk03"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL-o2R5f8ClvJQgzOoEnPpObl9gCeePBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
