@@ -313,7 +313,7 @@ class ChatRepository {
     }
   }
 
-  // 메시지 실시간 조회 (Stream 방식)
+  // 채팅방 리스트 가져오기 (Stream 방식)
   // 데이터를 가져올 때 asyncMap() 함수를 사용해서
   // Stream 에서 비동기 작업을 하고 새로운 Stream 생성을 해서 반환.
   Stream<List<ChatModel>> getChatList({required UserModel currentUserModel}) {

@@ -11,6 +11,7 @@ import 'package:ktalk03/chat/widgets/custom_image_viewer_widget.dart';
 import 'package:ktalk03/chat/widgets/video_download_widget.dart';
 import 'package:ktalk03/common/enum/message_enum.dart';
 import 'package:ktalk03/common/models/theme_color.dart';
+import 'package:ktalk03/common/providers/base_provider.dart';
 import 'package:ktalk03/common/providers/custom_theme_provider.dart';
 import 'package:ktalk03/common/utils/locale/generated/l10n.dart';
 
@@ -122,7 +123,8 @@ class _MessageCardWidgetState extends ConsumerState<MessageCardWidget>
     required ThemeColor themeColor,
   }) {
     // 먼저 채팅방의 정보를 가져와서 userList[1].displayName
-    final baseModel = ref.read(chatProvider).model;
+    //final baseModel = ref.read(chatProvider).model;
+    final baseModel = ref.read(baseProvider);
 
     // 상대방이 작성한 글에 댓글을 달 경우 상대방 이름 알아내기
     // 채팅방을 나갈 경우에는 S.current.unknown

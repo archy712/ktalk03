@@ -12,11 +12,14 @@ import 'package:ktalk03/chat/widgets/custom_image_viewer_widget.dart';
 import 'package:ktalk03/chat/widgets/video_download_widget.dart';
 import 'package:ktalk03/common/enum/message_enum.dart';
 import 'package:ktalk03/common/models/base_model.dart';
+import 'package:ktalk03/common/models/chat_model.dart';
 import 'package:ktalk03/common/models/theme_color.dart';
+import 'package:ktalk03/common/providers/base_provider.dart';
 import 'package:ktalk03/common/providers/custom_theme_provider.dart';
 import 'package:ktalk03/common/utils/global_navigator.dart';
 import 'package:ktalk03/common/utils/locale/generated/l10n.dart';
 import 'package:ktalk03/common/utils/logger.dart';
+import 'package:ktalk03/group/providers/group_provider.dart';
 
 class MessageInputFieldWidget extends ConsumerStatefulWidget {
   const MessageInputFieldWidget({super.key});
@@ -65,14 +68,24 @@ class _MessageInputFieldWidgetState
 
   // 텍스트 메시지 보내기
   Future<void> _sendTextMessage() async {
+    // baseProvider 에 등록한 상태관리 데이터 가져오기
+    final baseModel = ref.read(baseProvider);
+
     try {
       // 메시지 전송하고
-      ref
-          .read(chatProvider.notifier)
-          .sendMessage(
-            text: _textEditingController.text,
-            messageType: MessageEnum.text,
-          );
+      baseModel is ChatModel
+          ? ref
+              .read(chatProvider.notifier)
+              .sendMessage(
+                text: _textEditingController.text,
+                messageType: MessageEnum.text,
+              )
+          : ref
+              .read(groupProvider.notifier)
+              .sendMessage(
+                text: _textEditingController.text,
+                messageType: MessageEnum.text,
+              );
 
       // 메시지창 클리어
       _textEditingController.clear();
@@ -167,6 +180,9 @@ class _MessageInputFieldWidgetState
     // XFile
     XFile? xFile;
 
+    // baseProvider 에 등록한 상태관리 데이터 가져오기
+    final baseModel = ref.read(baseProvider);
+
     if (messageType == MessageEnum.image) {
       // 갤러리에서 사진을 선택할 수 있는 화면 보이기, 선택 안하면 null 리턴
       // 높이/넓이 1024 넘어갈 경우 최대 1024 조정
@@ -184,9 +200,13 @@ class _MessageInputFieldWidgetState
     if (xFile == null) return;
 
     // 미디어 메시지 전송
-    ref
-        .read(chatProvider.notifier)
-        .sendMessage(messageType: messageType, file: File(xFile.path));
+    baseModel is ChatModel
+        ? ref
+            .read(chatProvider.notifier)
+            .sendMessage(messageType: messageType, file: File(xFile.path))
+        : ref
+            .read(groupProvider.notifier)
+            .sendMessage(messageType: messageType, file: File(xFile.path));
   }
 
   // 댓글 작성 시 원래 메시지를 표시해 주는 위젯
@@ -195,7 +215,8 @@ class _MessageInputFieldWidgetState
     required MessageModel messageModel,
   }) {
     // 답글 메시지 작성 시 원본 메시지 작성자 이름을 알기 위해
-    final BaseModel baseModel = ref.read(chatProvider).model;
+    //final BaseModel baseModel = ref.read(chatProvider).model;
+    final baseModel = ref.read(baseProvider);
 
     // 현재 접속한 사용자(나)의 ID
     final String currentUserId = ref.watch(authProvider).userModel.uid;

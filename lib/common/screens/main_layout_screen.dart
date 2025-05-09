@@ -10,6 +10,7 @@ import 'package:ktalk03/common/utils/global_navigator.dart';
 import 'package:ktalk03/common/utils/locale/generated/l10n.dart';
 import 'package:ktalk03/common/utils/logger.dart';
 import 'package:ktalk03/friend/screens/friend_list_screen.dart';
+import 'package:ktalk03/group/screens/group_list_screen.dart';
 
 class MainLayoutScreen extends ConsumerStatefulWidget {
   const MainLayoutScreen({super.key});
@@ -141,11 +142,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
         body: const TabBarView(
           // 화면 스와이프 금지
           physics: NeverScrollableScrollPhysics(),
-          children: [
-            FriendListScreen(),
-            ChatListScreen(),
-            Center(child: Text('3번')),
-          ],
+          children: [FriendListScreen(), ChatListScreen(), GroupListScreen()],
         ),
       ),
     );
